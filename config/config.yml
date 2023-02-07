@@ -1,0 +1,14 @@
+app:
+  name: 'go-example'
+  version: '1.0.0'
+
+http:
+  port: '8080'
+
+logger:
+  log_level: 'debug'
+  rollbar_env: 'go-example'
+
+postgres:
+  pool_max: 2
+  url: 'bla bla bla TODO'
