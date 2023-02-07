@@ -28,7 +28,7 @@ type (
 	}
 
 	PG struct {
-		PoolMax string `yaml:"pool_max"`
+		PoolMax int    `yaml:"pool_max"`
 		URL     string `yaml:"url"`
 	}
 )
