@@ -27,5 +27,11 @@ func Run(cfg *config.Config) {
 	if err != nil {
 		l.Error().Err(err)
 	}
+
+	entity, err := productUseCase.GetProductById(context.Background(), 1)
+	if err != nil {
+		l.Error().Stack().Caller().Msg(err.Error())
+	}
 	fmt.Println(entities)
+	fmt.Println(entity)
 }

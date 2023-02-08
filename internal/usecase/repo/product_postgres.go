@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"fmt"
+	sq "github.com/Masterminds/squirrel"
 	"hexhoc/go-examples/internal/entity"
 	"hexhoc/go-examples/pkg/postgres"
 )
@@ -47,6 +48,27 @@ func (p *ProductRepo) FindAll(ctx context.Context) ([]entity.Product, error) {
 }
 
 func (p *ProductRepo) FindByID(ctx context.Context, ID int) (entity.Product, error) {
-	//TODO implement me
-	panic("implement me")
+	sql, _, err := p.Builder.
+		Select("id", "name", "amount", "price").
+		From("products").
+		Where(sq.Eq{"id": ID}).
+		ToSql()
+	if err != nil {
+		return entity.Product{}, fmt.Errorf("ProductRepo - FindAll - r.Builder: %w", err)
+	}
+
+	rows, err := p.Pool.Query(ctx, sql, ID)
+	if err != nil {
+		return entity.Product{}, fmt.Errorf("ProductRepo - FindAll - r.Pool.Query: %w", err)
+	}
+	defer rows.Close()
+
+	rows.Next()
+	e := entity.Product{}
+	err = rows.Scan(&e.ID, &e.Name, &e.Amount, &e.Price)
+	if err != nil {
+		return entity.Product{}, fmt.Errorf("ProductRepo - FindAll - rows.Scan: %w", err)
+	}
+
+	return e, nil
 }
